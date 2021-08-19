@@ -8,6 +8,7 @@ function App() {
   const [loginUsername, setLoginUsername] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
 
+  const [loggedIn, setLoggedIn] = useState(false)
   const [userData, setUserData] = useState("")
 
   const register = () => {
@@ -19,7 +20,7 @@ function App() {
       },
       withCredentials: true,
       url: "http://localhost:4000/register"
-    }).then((res) => console.log(res))
+    }).then((res) => alert("User created"))
   }
 
   const login = () => {
@@ -31,7 +32,7 @@ function App() {
       },
       withCredentials: true,
       url: "http://localhost:4000/login",
-    }).then((res) => console.log(res))
+    }).then((res) => setLoggedIn(true))
   }
 
   const getDocument = () => {
@@ -40,7 +41,7 @@ function App() {
       withCredentials: true,
       url: "http://localhost:4000/getUser",
     }).then((res) => {
-      setUserData(`Welcome ${res.data.username}`)
+      setUserData(`${res.data.data}`)
       console.log(res)
     })
   }
@@ -74,6 +75,7 @@ function App() {
       </div>
 
       <div>
+        <div>{loggedIn ? "User is logged in" : "User is not logged in"}</div>
         <button onClick={getDocument}>View document</button>
         <div>{userData}</div>
       </div>

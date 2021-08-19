@@ -29,7 +29,7 @@ module.exports = (passport) => {
   passport.deserializeUser((id, cb) => {
     db.get("SELECT * FROM users WHERE id = ?", [id], (err, user) => {
       const userInformation = {
-        username: user.username,
+        data: "This is accesible only to logged in users",
       }
       cb(err, userInformation)
     })
