@@ -10,7 +10,3 @@ module.exports = (passport) => {
     })
   )
 }
-
-database.get("SELECT * FROM users", (err, rows) => {
-  console.log(rows)
-})

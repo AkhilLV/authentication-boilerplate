@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs")
 const session = require("express-session")
 
 const db = require("./db/db.js")
-const { database } = db
+const database = db
 
 const app = express()
 
@@ -39,7 +39,21 @@ app.post("/login", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const encryptedPassword = await bcrypt.hash(req.body.password, 10)
-  database.includes(req.body.username, encryptedPassword, database)
+
+  console.log(database.db)
+
+  database.db.get(`SELECT * FROM users WHERE username = ?`, [req.body.username], (err, row) => {
+    if (row) {
+      console.log("User Exists")
+    } else {
+      database.db.run("Insert INTO users (username, password) values (?, ?)", [req.body.username, encryptedPassword], (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log("User Added")
+      })
+    }
+  })
 })
 
 app.get("/getUser", (req, res) => {
