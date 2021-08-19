@@ -8,6 +8,8 @@ function App() {
   const [loginUsername, setLoginUsername] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
 
+  const [userData, setUserData] = useState("")
+
   const register = () => {
     axios({
       method: "post",
@@ -32,12 +34,15 @@ function App() {
     }).then((res) => console.log(res))
   }
 
-  const getUser = () => {
+  const getDocument = () => {
     axios({
       method: "GET",
       withCredentials: true,
       url: "http://localhost:4000/getUser",
-    }).then((res) => console.log(res))
+    }).then((res) => {
+      setUserData(`Welcome ${res.data.username}`)
+      console.log(res)
+    })
   }
 
   return (
@@ -69,8 +74,8 @@ function App() {
       </div>
 
       <div>
-        <h1>Get User</h1>
-        <button onClick={getUser}>Submit</button>
+        <button onClick={getDocument}>View document</button>
+        <div>{userData}</div>
       </div>
     </div>
   )

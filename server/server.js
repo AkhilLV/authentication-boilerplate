@@ -6,8 +6,8 @@ const cookieParser = require("cookie-parser")
 const bcrypt = require("bcryptjs")
 const session = require("express-session")
 
-const db = require("./db/db.js")
-const database = db
+const database = require("./db/db.js")
+const db = database.db
 
 const app = express()
 
@@ -32,21 +32,37 @@ app.use(
 
 app.use(cookieParser("secretcode"))
 
+app.use(passport.initialize())
+app.use(passport.session())
+require("./passportConfig")(passport)
+
 // Routes
-app.post("/login", (req, res) => {
-  console.log(req.body)
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err
+    if (!user) {
+      res.status(400)
+      res.send("No User Exists")
+    }
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err
+        console.log("User logged in")
+        res.send("Successfully Authenticated")
+      })
+    }
+  })
+    (req, res, next)
 })
 
 app.post("/register", async (req, res) => {
   const encryptedPassword = await bcrypt.hash(req.body.password, 10)
 
-  console.log(database.db)
-
-  database.db.get(`SELECT * FROM users WHERE username = ?`, [req.body.username], (err, row) => {
+  db.get(`SELECT * FROM users WHERE username = ?`, [req.body.username], (err, row) => {
     if (row) {
       console.log("User Exists")
     } else {
-      database.db.run("Insert INTO users (username, password) values (?, ?)", [req.body.username, encryptedPassword], (err, res) => {
+      db.run("Insert INTO users (username, password) values (?, ?)", [req.body.username, encryptedPassword], (err, res) => {
         if (err) {
           console.log(err)
         }
@@ -57,9 +73,8 @@ app.post("/register", async (req, res) => {
 })
 
 app.get("/getUser", (req, res) => {
-  console.log(req.body)
-
-  res.send(database.get(req.body.username))
+  console.log(req.user)
+  res.send(req.user)
 })
 
 // Start Server
