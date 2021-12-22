@@ -12,7 +12,7 @@ const db = database.db
 const app = express()
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json()) // To parse the incoming requests with JSON payloads
 
 app.use(
@@ -73,10 +73,12 @@ app.post("/register", async (req, res) => {
 })
 
 app.get("/getUser", (req, res) => {
-  res.send(req.user)
+  console.log("GetUser")
+  console.log(req.user.data)
+  res.send(req.user.data)
 })
 
 // Start Server
-app.listen(4000, () => {
+app.listen(5000, () => {
   console.log("Server is running at PORT: 4000")
 })

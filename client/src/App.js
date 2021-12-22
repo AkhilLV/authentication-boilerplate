@@ -19,7 +19,7 @@ function App() {
         password: registerPassword
       },
       withCredentials: true,
-      url: "http://localhost:4000/register"
+      url: "http://localhost:5000/register"
     }).then((res) => alert("User created"))
   }
 
@@ -31,7 +31,7 @@ function App() {
         password: loginPassword,
       },
       withCredentials: true,
-      url: "http://localhost:4000/login",
+      url: "http://localhost:5000/login",
     }).then((res) => setLoggedIn(true))
   }
 
@@ -39,9 +39,9 @@ function App() {
     axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:4000/getUser",
+      url: "http://localhost:5000/getUser",
     }).then((res) => {
-      setUserData(`${res.data.data}`)
+      setUserData(`${res.data.username}`)
       console.log(res)
     })
   }
